@@ -28,6 +28,7 @@
         var pausa = false;
         var espace = false;
         var walls = [5];
+        var obstacle = [5];
         var bigdaddy = new Image();
         var plasmidImage = new Image();
         var bomba = new Image();
@@ -41,6 +42,7 @@
             player1 = new Cuadro(225,225,40,40,"red");
             plasmid = new Cuadro(random(400),random(400),40,40,"red");
 
+            wallsCreate();
             obstacleCreate();
             bombsCreate();
 
@@ -67,6 +69,8 @@
             ctx.drawImage(bigdaddy, player1.x, player1.y);
             //plasmid.pintar(ctx);
             ctx.drawImage(plasmidImage, plasmid.x, plasmid.y);
+
+            paintMap();
             
             if(espace){
                 time++;
@@ -80,10 +84,6 @@
                         bomba.src = 'bomba.png';
                     }
                 }
-            }
-
-            for (var x = 0; x < walls.length; x++) {
-                walls[x].pintar(ctx);
             }
 
             if(pausa){
@@ -140,29 +140,7 @@
                 adam.play();
             }
 
-            for (var x = 0; x < walls.length; x++) {
-                if(player1.intersects(walls[x])){
-                    if (direccion == 'arriba') {
-                        player1.y+=speed;
-                    }
-
-                    //abajo
-                    if (direccion == 'abajo') {
-                        player1.y-=speed;
-                    }
-
-                    //derecha
-                    if (direccion == 'derecha') {
-                        player1.x-=speed;
-                    }
-
-                    //izquierda
-                    if (direccion == 'izquierda') {
-                        player1.x+=speed;
-                    }
-                }
-                
-            }
+            collision();
         }
 
         document.addEventListener("keydown", function (e) {
@@ -245,12 +223,18 @@
 
         window.addEventListener('load',run ,false);
 
-        function obstacleCreate(){
+        function wallsCreate(){
 
             walls[0] = new Cuadro(1,0,29,560,"gray");
             walls[1] = new Cuadro(530,0,29,560,"gray");
             walls[2] = new Cuadro(30,1,500,29,"gray");
             walls[3] = new Cuadro(30,530,500,29,"gray"); 
+
+        }
+
+        function obstacleCreate(){
+
+            obstacle[0] = new Cuadro(100,100,40,40,"gray");
 
         }
 
@@ -276,6 +260,79 @@
         function bombsDraw(){
             for (let x = 0; x < 5; x++) {
                 ctx.drawImage(bomba,bomb[x].x,bomb[x].y);
+            }
+        }
+
+        function paintMap(){
+            for (let x = 0; x < obstacle.length; x++) {
+                if(obstacle[x]!=null){
+                    obstacle[x].pintar(ctx);
+                }
+            }
+
+            for (var x = 0; x < walls.length; x++) {
+                walls[x].pintar(ctx);
+            }
+        }
+
+        function collision(){
+            for (var x = 0; x < walls.length; x++) {
+                if(player1.intersects(walls[x])){
+                    if (direccion == 'arriba') {
+                        player1.y+=speed;
+                    }
+
+                    //abajo
+                    if (direccion == 'abajo') {
+                        player1.y-=speed;
+                    }
+
+                    //derecha
+                    if (direccion == 'derecha') {
+                        player1.x-=speed;
+                    }
+
+                    //izquierda
+                    if (direccion == 'izquierda') {
+                        player1.x+=speed;
+                    }
+                }
+                
+            }
+
+            for (var x = 0; x < obstacle.length; x++) {
+                if(obstacle[x]!=null){
+                    if(player1.intersects(obstacle[x])){
+                        if (direccion == 'arriba') {
+                            player1.y+=speed;
+                        }
+
+                        //abajo
+                        if (direccion == 'abajo') {
+                            player1.y-=speed;
+                        }
+
+                        //derecha
+                        if (direccion == 'derecha') {
+                            player1.x-=speed;
+                        }
+
+                        //izquierda
+                        if (direccion == 'izquierda') {
+                            player1.x+=speed;
+                        }
+                    }
+                }
+            }
+
+            for (var x = 0; x < bomb.length; x++) {
+                for (let y = 0; y < obstacle.length; y++) {
+                    if(obstacle[y]!=null){
+                        if(bomb[x].intersects(obstacle[y]) && time>=150){
+                            obstacle[y]=null;
+                        }
+                    }   
+                } 
             }
         }
 
