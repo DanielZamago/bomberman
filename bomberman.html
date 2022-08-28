@@ -19,34 +19,38 @@
         var cv = null;
         var ctx = null;
         var player1 = null;
-        var player2 = null;
-        var direccion = 'derecha';
+        var plasmid = null;
+        var bomb = null;
+        var direccion = '';
         var score = 0;
-        var velocidad = 2;
+        var speed = 2;
+        var time = 0;
         var pausa = false;
-        var paredes = [4];
+        var espace = false;
+        var walls = [5];
         var bigdaddy = new Image();
-        var littleSister = new Image();
+        var plasmidImage = new Image();
+        var bomba = new Image();
         var adam = new Audio();
         var img = document.getElementById('imagen');
         
 
         function run(){
+
             cv = document.getElementById("mycanvas");
             ctx = cv.getContext("2d");
             player1 = new Cuadro(225,225,40,40,"red");
-            player2 = new Cuadro(random(400),random(400),40,40,"red");
+            plasmid = new Cuadro(random(400),random(400),40,40,"red");
+            bomb = new Cuadro(50,50,40,40,"red");
 
-            paredes[0] = new Cuadro(1,0,29,560,"gray");
-            paredes[1] = new Cuadro(530,0,29,560,"gray");
-            paredes[2] = new Cuadro(30,1,500,29,"gray");
-            paredes[3] = new Cuadro(30,530,500,29,"gray"); 
+            obstacle();
 
             bigdaddy.src = 'bigdaddy.png';
-            littleSister.src= 'plasmid.png';
-            adam.src = '.mp3';
+            plasmidImage.src= 'plasmid.png';
+            bomba.src = 'bomba.png';
 
             paint();
+
         }
 
         function paint() {
@@ -57,24 +61,33 @@
             ctx.fillStyle = "rgba(0,0,0,0)";
             ctx.fillRect(0, 0, 560, 560);
             
-            ctx.fillStyle="black";
-            ctx.fillText("Score:"+score,10,20);
+            ctx.fillStyle="white";
+            ctx.fillText("Score:"+score,50,50);
 
             //player1.pintar(ctx);
             ctx.drawImage(bigdaddy, player1.x, player1.y);
-            //player2.pintar(ctx);
-            ctx.drawImage(littleSister, player2.x, player2.y);
+            //plasmid.pintar(ctx);
+            ctx.drawImage(plasmidImage, plasmid.x, plasmid.y);
             
-            for (var x = 0; x < paredes.length; x++) {
-                paredes[x].pintar(ctx);
+            if(espace){
+                time++;
+                ctx.drawImage(bomba,bomb.x,bomb.y);
+                if(time>=150){
+                    time=0;
+                    espace=false;
+                }
+            }
+
+            for (var x = 0; x < walls.length; x++) {
+                walls[x].pintar(ctx);
             }
 
             if(pausa){
                 ctx.fillStyle="rgba(0,0,0,0.8)";
-                ctx.fillRect(0,0,500,500);
+                ctx.fillRect(0,0,560,560);
                 
-                ctx.fillStyle="red";
-                ctx.fillText('P A U S A', 225,225);
+                ctx.fillStyle="white";
+                ctx.fillText('P A U S E', 245,245);
             }else{
                 update();
             }
@@ -82,7 +95,7 @@
 
         function update(){
             if (direccion == 'arriba') {
-                player1.y-=velocidad;
+                player1.y-=speed;
                 if(player1.y<0){
                     player1.y=500;
                 }
@@ -91,7 +104,7 @@
 
             //abajo
             if (direccion == 'abajo') {
-                player1.y+=velocidad;
+                player1.y+=speed;
                 if(player1.y>500){
                     player1.y=0;
                 }
@@ -100,7 +113,7 @@
 
             //derecha
             if (direccion == 'derecha') {
-                player1.x+=velocidad;
+                player1.x+=speed;
                 if(player1.x>500){
                     player1.x=0;
                 }
@@ -109,41 +122,39 @@
 
             //izquierda
             if (direccion == 'izquierda') {
-                player1.x-=velocidad;
+                player1.x-=speed;
                 if(player1.x<0){
                     player1.x=500;
                 }
                 bigdaddy.src = 'bigdaddy.png';
             }
             
-
-            if (player1.intersects(player2)){
-                player2.x = random(500);
-                player2.y = random(500);
+            if (player1.intersects(plasmid)){
+                plasmid.x = random(500);
+                plasmid.y = random(500);
                 score+=1;
-                velocidad+=2;
                 adam.play();
             }
 
-            for (var x = 0; x < paredes.length; x++) {
-                if(player1.intersects(paredes[x])){
+            for (var x = 0; x < walls.length; x++) {
+                if(player1.intersects(walls[x])){
                     if (direccion == 'arriba') {
-                        player1.y+=velocidad;
+                        player1.y+=speed;
                     }
 
                     //abajo
                     if (direccion == 'abajo') {
-                        player1.y-=velocidad;
+                        player1.y-=speed;
                     }
 
                     //derecha
                     if (direccion == 'derecha') {
-                        player1.x-=velocidad;
+                        player1.x-=speed;
                     }
 
                     //izquierda
                     if (direccion == 'izquierda') {
-                        player1.x+=velocidad;
+                        player1.x+=speed;
                     }
                 }
                 
@@ -174,6 +185,12 @@
             }
 
             if(e.keyCode == 32){
+                bomb.x=player1.x;
+                bomb.y=player1.y;
+                espace=true;
+            }
+
+            if(e.keyCode == 27){
                 pausa=(pausa)?false:true;
             }
             
@@ -224,6 +241,15 @@
         })();
 
         window.addEventListener('load',run ,false);
+
+        function obstacle(){
+
+            walls[0] = new Cuadro(1,0,29,560,"gray");
+            walls[1] = new Cuadro(530,0,29,560,"gray");
+            walls[2] = new Cuadro(30,1,500,29,"gray");
+            walls[3] = new Cuadro(30,530,500,29,"gray"); 
+
+        }
 
         function random(number){
             return Math.floor(Math.random()*number);
