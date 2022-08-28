@@ -14,24 +14,25 @@
     <body>
     <canvas id="mycanvas" width="560" height="560"> </canvas>
 
-        <img id="imagen" src="rapture.jpeg" style="display:none;">
+        <img id="imagen" src="img/rapture.jpeg" style="display:none;">
         <script type="text/javascript">
         var cv = null;
         var ctx = null;
         var player1 = null;
         var plasmid = null;
         var bomb = [5];
+        var walls = [5];
+        var obstacle = [5];
         var direccion = '';
         var score = 0;
         var speed = 2;
         var time = 0;
         var pausa = false;
         var espace = false;
-        var walls = [5];
-        var obstacle = [5];
         var bigdaddy = new Image();
         var plasmidImage = new Image();
         var bomba = new Image();
+        var tuboVertical = new Image();
         var adam = new Audio();
         var img = document.getElementById('imagen');
 
@@ -46,9 +47,10 @@
             obstacleCreate();
             bombsCreate();
 
-            bigdaddy.src = 'bigdaddy.png';
-            plasmidImage.src= 'plasmid.png';
-            bomba.src = 'bomba.png';
+            bigdaddy.src = 'img/bigdaddy.png';
+            plasmidImage.src= 'img/plasmid.png';
+            bomba.src = 'img/bomba.png';
+            tuboVertical.src = 'img/tubo1.png'
 
             paint();
 
@@ -58,7 +60,7 @@
 
             window.requestAnimationFrame(paint);
 
-            ctx.drawImage(img, 0,30);
+            ctx.drawImage(img, 0,0);
             ctx.fillStyle = "rgba(0,0,0,0)";
             ctx.fillRect(0, 0, 560, 560);
             
@@ -76,12 +78,12 @@
                 time++;
                 ctx.drawImage(bomba,bomb[0].x,bomb[0].y);
                 if(time>=150){
-                    bomba.src = 'explosion.png';
+                    bomba.src = 'img/explosion.png';
                     bombsDraw();
                     if(time>=200){
                         time=0;
                         espace=false;
-                        bomba.src = 'bomba.png';
+                        bomba.src = 'img/bomba.png';
                     }
                 }
             }
@@ -103,7 +105,7 @@
                 if(player1.y<0){
                     player1.y=500;
                 }
-                bigdaddy.src = 'bigdaddy1.png';
+                bigdaddy.src = 'img/bigdaddy1.png';
             }
 
             //abajo
@@ -112,7 +114,7 @@
                 if(player1.y>500){
                     player1.y=0;
                 }
-                bigdaddy.src = 'bigdaddy1.png';
+                bigdaddy.src = 'img/bigdaddy1.png';
             }
 
             //derecha
@@ -121,7 +123,7 @@
                 if(player1.x>500){
                     player1.x=0;
                 }
-                bigdaddy.src = 'bigdaddy2.png';
+                bigdaddy.src = 'img/bigdaddy2.png';
             }
 
             //izquierda
@@ -130,7 +132,7 @@
                 if(player1.x<0){
                     player1.x=500;
                 }
-                bigdaddy.src = 'bigdaddy.png';
+                bigdaddy.src = 'img/bigdaddy.png';
             }
             
             if (player1.intersects(plasmid)){
@@ -205,7 +207,7 @@
 
                 ctx.fillStyle = this.c;
                 ctx.fillRect(this.x, this.y, this.w, this.h);
-                ctx.strokeRect(this.x, this.y, this.w, this.h);
+                //ctx.strokeRect(this.x, this.y, this.w, this.h);
 
             }
         }
@@ -225,10 +227,10 @@
 
         function wallsCreate(){
 
-            walls[0] = new Cuadro(1,0,29,560,"gray");
-            walls[1] = new Cuadro(530,0,29,560,"gray");
-            walls[2] = new Cuadro(30,1,500,29,"gray");
-            walls[3] = new Cuadro(30,530,500,29,"gray"); 
+            walls[0] = new Cuadro(1,0,17,560,"rgba(0,0,0,0)");
+            walls[1] = new Cuadro(530,0,17,560,"rgba(0,0,0,0)");
+            walls[2] = new Cuadro(30,1,500,29,"rgba(0,0,0,0)");
+            walls[3] = new Cuadro(30,530,500,29,"rgba(0,0,0,0)"); 
 
         }
 
@@ -239,7 +241,7 @@
         }
 
         function bombsCreate(){
-            for (let x = 0; x < 5; x++) {
+            for (var x = 0; x < 5; x++) {
                 bomb[x] = new Cuadro(40,40,40,40,"red");
             }
         }
@@ -258,13 +260,13 @@
         }
         
         function bombsDraw(){
-            for (let x = 0; x < 5; x++) {
+            for (var x = 0; x < 5; x++) {
                 ctx.drawImage(bomba,bomb[x].x,bomb[x].y);
             }
         }
 
         function paintMap(){
-            for (let x = 0; x < obstacle.length; x++) {
+            for (var x = 0; x < obstacle.length; x++) {
                 if(obstacle[x]!=null){
                     obstacle[x].pintar(ctx);
                 }
@@ -272,6 +274,18 @@
 
             for (var x = 0; x < walls.length; x++) {
                 walls[x].pintar(ctx);
+                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y-2);
+                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+90);
+                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+182);
+                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+274);
+                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+366);
+                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+460);
+                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y-2);
+                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+90);
+                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+182);
+                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+274);
+                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+366);
+                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+460);
             }
         }
 
@@ -326,7 +340,7 @@
             }
 
             for (var x = 0; x < bomb.length; x++) {
-                for (let y = 0; y < obstacle.length; y++) {
+                for (var y = 0; y < obstacle.length; y++) {
                     if(obstacle[y]!=null){
                         if(bomb[x].intersects(obstacle[y]) && time>=150){
                             obstacle[y]=null;
