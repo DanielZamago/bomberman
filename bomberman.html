@@ -33,6 +33,7 @@
         var plasmidImage = new Image();
         var bomba = new Image();
         var tuboVertical = new Image();
+        var tuboHorizontal = new Image();
         var adam = new Audio();
         var img = document.getElementById('imagen');
 
@@ -50,7 +51,8 @@
             bigdaddy.src = 'img/bigdaddy.png';
             plasmidImage.src= 'img/plasmid.png';
             bomba.src = 'img/bomba.png';
-            tuboVertical.src = 'img/tubo1.png'
+            tuboVertical.src = 'img/tubo1.png';
+            tuboHorizontal.src = 'img/tubo2.png';
 
             paint();
 
@@ -229,8 +231,8 @@
 
             walls[0] = new Cuadro(1,0,17,560,"rgba(0,0,0,0)");
             walls[1] = new Cuadro(530,0,17,560,"rgba(0,0,0,0)");
-            walls[2] = new Cuadro(30,1,500,29,"rgba(0,0,0,0)");
-            walls[3] = new Cuadro(30,530,500,29,"rgba(0,0,0,0)"); 
+            walls[2] = new Cuadro(20,0,500,17,"rgba(0,0,0,0)");
+            walls[3] = new Cuadro(20,530,500,29,"rgba(0,0,0,0)"); 
 
         }
 
@@ -247,8 +249,8 @@
         }
 
         function bombPosition(){
-            bomb[0].x=player1.x;
-            bomb[0].y=player1.y;
+            bomb[0].x=player1.x+5;
+            bomb[0].y=player1.y+5;
             bomb[1].x=player1.x;
             bomb[1].y=player1.y-30;
             bomb[2].x=player1.x;
@@ -261,34 +263,14 @@
         
         function bombsDraw(){
             for (var x = 0; x < 5; x++) {
+                if(x==0){
+                    ctx.drawImage(bomba,bomb[x].x-10,bomb[x].y-5);
+                }
                 ctx.drawImage(bomba,bomb[x].x,bomb[x].y);
             }
         }
 
-        function paintMap(){
-            for (var x = 0; x < obstacle.length; x++) {
-                if(obstacle[x]!=null){
-                    obstacle[x].pintar(ctx);
-                }
-            }
-
-            for (var x = 0; x < walls.length; x++) {
-                walls[x].pintar(ctx);
-                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y-2);
-                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+90);
-                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+182);
-                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+274);
-                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+366);
-                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+460);
-                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y-2);
-                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+90);
-                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+182);
-                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+274);
-                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+366);
-                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+460);
-            }
-        }
-
+        
         function collision(){
             for (var x = 0; x < walls.length; x++) {
                 if(player1.intersects(walls[x])){
@@ -330,7 +312,7 @@
                         if (direccion == 'derecha') {
                             player1.x-=speed;
                         }
-
+                        
                         //izquierda
                         if (direccion == 'izquierda') {
                             player1.x+=speed;
@@ -338,7 +320,7 @@
                     }
                 }
             }
-
+            
             for (var x = 0; x < bomb.length; x++) {
                 for (var y = 0; y < obstacle.length; y++) {
                     if(obstacle[y]!=null){
@@ -349,7 +331,43 @@
                 } 
             }
         }
+        
+        function paintMap(){
+            for (var x = 0; x < obstacle.length; x++) {
+                if(obstacle[x]!=null){
+                    obstacle[x].pintar(ctx);
+                }
+            }
 
+            for (var x = 0; x < walls.length; x++) {
+                walls[x].pintar(ctx);
+                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y-2);
+                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+90);
+                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+182);
+                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+274);
+                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+366);
+                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+458);
+                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y-2);
+                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+90);
+                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+182);
+                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+274);
+                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+366);
+                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+458);
+                ctx.drawImage(tuboHorizontal,walls[2].x-20,walls[2].y-10);
+                ctx.drawImage(tuboHorizontal,walls[2].x+70,walls[2].y-10);
+                ctx.drawImage(tuboHorizontal,walls[2].x+160,walls[2].y-10);
+                ctx.drawImage(tuboHorizontal,walls[2].x+250,walls[2].y-10);
+                ctx.drawImage(tuboHorizontal,walls[2].x+340,walls[2].y-10);
+                ctx.drawImage(tuboHorizontal,walls[2].x+430,walls[2].y-10);
+                ctx.drawImage(tuboHorizontal,walls[3].x-20,walls[3].y-10);
+                ctx.drawImage(tuboHorizontal,walls[3].x+70,walls[3].y-10);
+                ctx.drawImage(tuboHorizontal,walls[3].x+160,walls[3].y-10);
+                ctx.drawImage(tuboHorizontal,walls[3].x+250,walls[3].y-10);
+                ctx.drawImage(tuboHorizontal,walls[3].x+340,walls[3].y-10);
+                ctx.drawImage(tuboHorizontal,walls[3].x+430,walls[3].y-10);
+            }
+        }
+        
         function random(number){
             return Math.floor(Math.random()*number);
         }
