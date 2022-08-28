@@ -20,7 +20,7 @@
         var ctx = null;
         var player1 = null;
         var plasmid = null;
-        var bomb = null;
+        var bomb = [5];
         var direccion = '';
         var score = 0;
         var speed = 2;
@@ -33,7 +33,6 @@
         var bomba = new Image();
         var adam = new Audio();
         var img = document.getElementById('imagen');
-        
 
         function run(){
 
@@ -41,9 +40,9 @@
             ctx = cv.getContext("2d");
             player1 = new Cuadro(225,225,40,40,"red");
             plasmid = new Cuadro(random(400),random(400),40,40,"red");
-            bomb = new Cuadro(50,50,40,40,"red");
 
-            obstacle();
+            obstacleCreate();
+            bombsCreate();
 
             bigdaddy.src = 'bigdaddy.png';
             plasmidImage.src= 'plasmid.png';
@@ -71,10 +70,15 @@
             
             if(espace){
                 time++;
-                ctx.drawImage(bomba,bomb.x,bomb.y);
+                ctx.drawImage(bomba,bomb[0].x,bomb[0].y);
                 if(time>=150){
-                    time=0;
-                    espace=false;
+                    bomba.src = 'explosion.png';
+                    bombsDraw();
+                    if(time>=200){
+                        time=0;
+                        espace=false;
+                        bomba.src = 'bomba.png';
+                    }
                 }
             }
 
@@ -184,9 +188,8 @@
                 direccion = 'izquierda';
             }
 
-            if(e.keyCode == 32){
-                bomb.x=player1.x;
-                bomb.y=player1.y;
+            if(e.keyCode == 32 && time==0){
+                bombPosition();
                 espace=true;
             }
 
@@ -242,13 +245,38 @@
 
         window.addEventListener('load',run ,false);
 
-        function obstacle(){
+        function obstacleCreate(){
 
             walls[0] = new Cuadro(1,0,29,560,"gray");
             walls[1] = new Cuadro(530,0,29,560,"gray");
             walls[2] = new Cuadro(30,1,500,29,"gray");
             walls[3] = new Cuadro(30,530,500,29,"gray"); 
 
+        }
+
+        function bombsCreate(){
+            for (let x = 0; x < 5; x++) {
+                bomb[x] = new Cuadro(40,40,40,40,"red");
+            }
+        }
+
+        function bombPosition(){
+            bomb[0].x=player1.x;
+            bomb[0].y=player1.y;
+            bomb[1].x=player1.x;
+            bomb[1].y=player1.y-30;
+            bomb[2].x=player1.x;
+            bomb[2].y=player1.y+30;
+            bomb[3].x=player1.x-30;
+            bomb[3].y=player1.y;
+            bomb[4].x=player1.x+30;
+            bomb[4].y=player1.y;
+        }
+        
+        function bombsDraw(){
+            for (let x = 0; x < 5; x++) {
+                ctx.drawImage(bomba,bomb[x].x,bomb[x].y);
+            }
         }
 
         function random(number){
