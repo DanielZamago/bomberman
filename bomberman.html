@@ -35,6 +35,8 @@
         var tuboVertical = new Image();
         var tuboHorizontal = new Image();
         var tuboDestruible = new Image();
+        var song = new Audio();
+        var bombSound = new Audio();
         var adam = new Audio();
         var img = document.getElementById('imagen');
 
@@ -55,6 +57,8 @@
             tuboVertical.src = 'img/tubo1.png';
             tuboHorizontal.src = 'img/tubo2.png';
             tuboDestruible.src = 'img/tuboDest.png';
+            song.src = 'music/song.mp3';
+            bombSound.src = 'music/bombSound.mp3';
 
             paint();
 
@@ -84,6 +88,7 @@
                 time++;
                 ctx.drawImage(bomba,bomb[0].x,bomb[0].y);
                 if(time>=150){
+                    bombSound.play();
                     bomba.src = 'img/explosion.png';
                     bombsDraw();
                     if(time>=200){
@@ -153,6 +158,8 @@
 
         document.addEventListener("keydown", function (e) {
             console.log(e);
+            
+            song.play();
 
             //arriba
             if (e.keyCode == 87 || e.keyCode == 38) {
@@ -259,7 +266,7 @@
 
         function drawObstacle(){
             for (let x = 0; x < obstacle.length; x++) {
-                if(obstacle[0]!=null){
+                if(obstacle[x]!=null){
                     ctx.drawImage(tuboDestruible, obstacle[x].x+5, obstacle[x].y);
                 }
             }
@@ -285,7 +292,7 @@
         }
         
         function bombsDraw(){
-            for (var x = 0; x < 5; x++) {
+            for (var x = 0; x < bomb.length; x++) {
                 if(x==0){
                     ctx.drawImage(bomba,bomb[x].x-10,bomb[x].y-5);
                 }
