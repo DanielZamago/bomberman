@@ -21,7 +21,7 @@
         var player1 = null;
         var plasmid = null;
         var bomb = [5];
-        var walls = [5];
+        var walls = [100];
         var obstacle = [5];
         var direccion = '';
         var score = 0;
@@ -34,6 +34,7 @@
         var bomba = new Image();
         var tuboVertical = new Image();
         var tuboHorizontal = new Image();
+        var tuboDestruible = new Image();
         var adam = new Audio();
         var img = document.getElementById('imagen');
 
@@ -53,6 +54,7 @@
             bomba.src = 'img/bomba.png';
             tuboVertical.src = 'img/tubo1.png';
             tuboHorizontal.src = 'img/tubo2.png';
+            tuboDestruible.src = 'img/tuboDest.png';
 
             paint();
 
@@ -73,6 +75,8 @@
             ctx.drawImage(bigdaddy, player1.x, player1.y);
             //plasmid.pintar(ctx);
             ctx.drawImage(plasmidImage, plasmid.x, plasmid.y);
+
+            drawObstacle()
 
             paintMap();
             
@@ -228,18 +232,37 @@
         window.addEventListener('load',run ,false);
 
         function wallsCreate(){
-
+            //exterior
             walls[0] = new Cuadro(1,0,17,560,"rgba(0,0,0,0)");
             walls[1] = new Cuadro(530,0,17,560,"rgba(0,0,0,0)");
             walls[2] = new Cuadro(20,0,500,17,"rgba(0,0,0,0)");
             walls[3] = new Cuadro(20,530,500,29,"rgba(0,0,0,0)"); 
+            //interior
+            walls[4]= new  Cuadro(60,60,100,29,"rgba(0,0,0,0)");
+            walls[5]= new  Cuadro(230,60,100,29,"rgba(0,0,0,0)");
+            walls[6]= new  Cuadro(330,60,100,29,"rgba(0,0,0,0)");
+            walls[7]= new  Cuadro(430,60,100,29,"rgba(0,0,0,0)");
+            walls[8]= new  Cuadro(60,89,27,100,"rgba(0,0,0,0)");
+            walls[9]= new  Cuadro(130,129,27,100,"rgba(0,0,0,0)");
+            walls[10]= new  Cuadro(159,129,100,29,"rgba(0,0,0,0)");
+            walls[11]= new  Cuadro(259,129,100,29,"rgba(0,0,0,0)");
+            walls[12]= new  Cuadro(424,129,100,29,"rgba(0,0,0,0)");
 
         }
 
         function obstacleCreate(){
 
-            obstacle[0] = new Cuadro(100,100,40,40,"gray");
+            obstacle[0] = new Cuadro(170,60,40,28,"rgba(0,0,0,0)");
+            obstacle[1] = new Cuadro(360,130,40,28,"rgba(0,0,0,0)");
 
+        }
+
+        function drawObstacle(){
+            for (let x = 0; x < obstacle.length; x++) {
+                if(obstacle[0]!=null){
+                    ctx.drawImage(tuboDestruible, obstacle[x].x+5, obstacle[x].y);
+                }
+            }
         }
 
         function bombsCreate(){
@@ -341,6 +364,7 @@
 
             for (var x = 0; x < walls.length; x++) {
                 walls[x].pintar(ctx);
+                //Exterior
                 ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y-2);
                 ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+90);
                 ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+182);
@@ -365,9 +389,20 @@
                 ctx.drawImage(tuboHorizontal,walls[3].x+250,walls[3].y-10);
                 ctx.drawImage(tuboHorizontal,walls[3].x+340,walls[3].y-10);
                 ctx.drawImage(tuboHorizontal,walls[3].x+430,walls[3].y-10);
+
+                //interior
+                ctx.drawImage(tuboHorizontal,walls[4].x+10,walls[4].y-5);
+                ctx.drawImage(tuboHorizontal,walls[5].x,walls[5].y-5);
+                ctx.drawImage(tuboHorizontal,walls[6].x,walls[6].y-5);
+                ctx.drawImage(tuboHorizontal,walls[7].x,walls[7].y-5);
+                ctx.drawImage(tuboVertical,walls[8].x-5,walls[8].y);
+                ctx.drawImage(tuboVertical,walls[9].x-5,walls[9].y);
+                ctx.drawImage(tuboHorizontal,walls[10].x,walls[10].y-5);
+                ctx.drawImage(tuboHorizontal,walls[11].x,walls[11].y-5);
+                ctx.drawImage(tuboHorizontal,walls[12].x,walls[12].y-5);
             }
         }
-        
+
         function random(number){
             return Math.floor(Math.random()*number);
         }
