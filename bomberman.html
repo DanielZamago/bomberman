@@ -7,14 +7,13 @@
         <title>Canvas</title>
         <style type="text/css">
         canvas {
-            background-color: pink;
+            background-color: black;
         }
         </style>
     </head>
     <body>
-    <canvas id="mycanvas" width="1060" height="560"> </canvas>
+    <canvas id="mycanvas" width="1560" height="560"> </canvas>
 
-        <img id="imagen" src="img/rapture.jpeg" style="display:none;">
         <script type="text/javascript">
         var cv = null;
         var ctx = null;
@@ -22,7 +21,7 @@
         var plasmid = null;
         var bomb = [5];
         var walls = [100];
-        var obstacle = [5];
+        var obstacle = [100];
         var direccion = '';
         var score = 0;
         var speed = 2;
@@ -35,22 +34,23 @@
         var tuboVertical = new Image();
         var tuboHorizontal = new Image();
         var tuboDestruible = new Image();
+        var img = new Image();
         var song = new Audio();
         var bombSound = new Audio();
         var adam = new Audio();
-        var img = document.getElementById('imagen');
 
         function run(){
 
             cv = document.getElementById("mycanvas");
             ctx = cv.getContext("2d");
-            player1 = new Cuadro(480,20,40,40,"red");
+            player1 = new Cuadro(480,270,40,40,"red");
             plasmid = new Cuadro(random(400),random(400),40,40,"red");
 
             wallsCreate();
             obstacleCreate();
             bombsCreate();
 
+            img.src = 'img/bigdaddyFondo.jpg'
             bigdaddy.src = 'img/bigdaddy.png';
             plasmidImage.src= 'img/plasmid.png';
             bomba.src = 'img/bomba.png';
@@ -60,6 +60,7 @@
             song.src = 'music/song.mp3';
             bombSound.src = 'music/bombSound.mp3';
 
+            obstacleNumber();
             paint();
 
         }
@@ -69,15 +70,14 @@
             window.requestAnimationFrame(paint);
 
             ctx.drawImage(img, 0,0);
-            ctx.drawImage(img, 530,0);
             ctx.fillStyle = "rgba(0,0,0,0)";
-            ctx.fillRect(0, 0, 560, 560);
+            ctx.fillRect(0, 0, 1060, 560);
             
             ctx.fillStyle="white";
-            ctx.fillText("Score:"+score,50,50);
+            ctx.fillText("Bombas restantes:"+score,50,50);
 
             //player1.pintar(ctx);
-            ctx.drawImage(bigdaddy, player1.x, player1.y);
+            ctx.drawImage(bigdaddy, player1.x-5, player1.y);
             //plasmid.pintar(ctx);
             ctx.drawImage(plasmidImage, plasmid.x, plasmid.y);
 
@@ -102,10 +102,16 @@
 
             if(pausa){
                 ctx.fillStyle="rgba(0,0,0,0.8)";
-                ctx.fillRect(0,0,560,560);
+                ctx.fillRect(0,0,1060,560);
                 
                 ctx.fillStyle="white";
-                ctx.fillText('P A U S E', 245,245);
+                ctx.fillText('P A U S E', 530,245);
+            }else if(score==0){
+                ctx.fillStyle="rgba(0,0,0,0.8)";
+                ctx.fillRect(0,0,1060,560);
+                
+                ctx.fillStyle="white";
+                ctx.fillText('F I N  D E L  J U E G O', 510,245);
             }else{
                 update();
             }
@@ -150,7 +156,6 @@
             if (player1.intersects(plasmid)){
                 plasmid.x = random(500);
                 plasmid.y = random(500);
-                score+=1;
                 adam.play();
             }
 
@@ -251,11 +256,23 @@
             walls[6]= new  Cuadro(60,89,27,100,"rgba(0,0,0,0)");
             walls[7]= new  Cuadro(130,130,27,100,"rgba(0,0,0,0)");
             walls[8]= new  Cuadro(159,130,200,29,"rgba(0,0,0,0)");
-            walls[9]= new  Cuadro(424,130,100,29,"rgba(0,0,0,0)");
+            walls[9]= new  Cuadro(424,130,400,29,"rgba(0,0,0,0)");
             walls[10]= new  Cuadro(30,230,100,29,"rgba(0,0,0,0)");
             walls[11]= new  Cuadro(230,200,300,29,"rgba(0,0,0,0)");
             walls[12]= new  Cuadro(600,60,200,29,"rgba(0,0,0,0)");
-            walls[13]= new  Cuadro(870,60,29,200,"rgba(0,0,0,1)");
+            walls[13]= new  Cuadro(870,60,29,500,"rgba(0,0,0,0)");
+            walls[14]= new  Cuadro(950,60,29,390,"rgba(0,0,0,0)");
+            walls[15]= new  Cuadro(870,60,100,29,"rgba(0,0,0,0)");
+            walls[16]= new  Cuadro(950,500,29,50,"rgba(0,0,0,0)");
+            walls[17]= new  Cuadro(950,500,100,29,"rgba(0,0,0,0)");
+            walls[18]= new  Cuadro(800,160,29,310,"rgba(0,0,0,0)");
+            walls[19]= new  Cuadro(730,200,29,320,"rgba(0,0,0,0)");
+            walls[20]= new  Cuadro(660,160,29,310,"rgba(0,0,0,0)");
+            walls[21]= new  Cuadro(590,200,29,320,"rgba(0,0,0,0)");
+            walls[22]= new  Cuadro(520,160,29,310,"rgba(0,0,0,0)");
+            walls[23]= new  Cuadro(70,460,479,29,"rgba(0,0,0,0)");
+            walls[24]= new  Cuadro(30,390,440,29,"rgba(0,0,0,0)");
+            walls[25]= new  Cuadro(70,320,479,29,"rgba(0,0,0,0)");
 
 
         }
@@ -268,6 +285,21 @@
             obstacle[3] = new Cuadro(540,60,40,28,"rgba(0,0,0,0)");
             obstacle[4] = new Cuadro(805,60,40,28,"rgba(0,0,0,0)");
             obstacle[5] = new Cuadro(860,25,40,28,"rgba(0,0,0,0)");
+            obstacle[6] = new Cuadro(890,140,40,28,"rgba(0,0,0,0)");
+            obstacle[7] = new Cuadro(815,130,40,28,"rgba(0,0,0,0)");
+            obstacle[8] = new Cuadro(890,500,40,28,"rgba(0,0,0,0)");
+            obstacle[9] = new Cuadro(890,410,40,28,"rgba(0,0,0,0)");
+            obstacle[10] = new Cuadro(780,480,40,28,"rgba(0,0,0,0)");
+            obstacle[11] = new Cuadro(710,155,40,28,"rgba(0,0,0,0)");
+            obstacle[12] = new Cuadro(575,155,40,28,"rgba(0,0,0,0)");
+            obstacle[13] = new Cuadro(20,490,40,28,"rgba(0,0,0,0)");
+            obstacle[14] = new Cuadro(20,420,40,28,"rgba(0,0,0,0)");
+            obstacle[15] = new Cuadro(460,390,40,28,"rgba(0,0,0,0)");
+            obstacle[16] = new Cuadro(350,230,60,28,"rgba(0,0,0,0)");
+            obstacle[17] = new Cuadro(300,270,60,28,"rgba(0,0,0,0)");
+            obstacle[18] = new Cuadro(20,20,60,28,"rgba(0,0,0,0)");
+            obstacle[19] = new Cuadro(20,270,60,28,"rgba(0,0,0,0)");
+            obstacle[20] = new Cuadro(530,490,40,28,"rgba(0,0,0,0)");
 
         }
 
@@ -360,12 +392,21 @@
             
             for (var x = 0; x < bomb.length; x++) {
                 for (var y = 0; y < obstacle.length; y++) {
-                    if(obstacle[y]!=null){
+                    if(bomb[x]!=null && obstacle[y]!=null){
                         if(bomb[x].intersects(obstacle[y]) && time>=150){
                             obstacle[y]=null;
+                            score--;
                         }
                     }   
                 } 
+            }
+        }
+
+        function obstacleNumber(){
+            for (let x = 0; x < obstacle.length; x++) {
+                if(obstacle[x]!=null){
+                    score++;
+                }
             }
         }
         
@@ -378,64 +419,110 @@
 
             for (var x = 0; x < walls.length; x++) {
                 walls[x].pintar(ctx);
-                //Exterior
-                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y-2);
-                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+90);
-                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+182);
-                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+274);
-                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+366);
-                ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+458);
-                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y-2);
-                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+90);
-                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+182);
-                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+274);
-                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+366);
-                ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+458);
-                ctx.drawImage(tuboHorizontal,walls[2].x-20,walls[2].y-10);
-                ctx.drawImage(tuboHorizontal,walls[2].x+70,walls[2].y-10);
-                ctx.drawImage(tuboHorizontal,walls[2].x+160,walls[2].y-10);
-                ctx.drawImage(tuboHorizontal,walls[2].x+250,walls[2].y-10);
-                ctx.drawImage(tuboHorizontal,walls[2].x+340,walls[2].y-10);
-                ctx.drawImage(tuboHorizontal,walls[2].x+430,walls[2].y-10);
-                ctx.drawImage(tuboHorizontal,walls[2].x+520,walls[2].y-10);
-                ctx.drawImage(tuboHorizontal,walls[2].x+610,walls[2].y-10);
-                ctx.drawImage(tuboHorizontal,walls[2].x+700,walls[2].y-10);
-                ctx.drawImage(tuboHorizontal,walls[2].x+790,walls[2].y-10);
-                ctx.drawImage(tuboHorizontal,walls[2].x+880,walls[2].y-10);
-                ctx.drawImage(tuboHorizontal,walls[2].x+970,walls[2].y-10);
-                ctx.drawImage(tuboHorizontal,walls[3].x-20,walls[3].y-10);
-                ctx.drawImage(tuboHorizontal,walls[3].x+70,walls[3].y-10);
-                ctx.drawImage(tuboHorizontal,walls[3].x+160,walls[3].y-10);
-                ctx.drawImage(tuboHorizontal,walls[3].x+250,walls[3].y-10);
-                ctx.drawImage(tuboHorizontal,walls[3].x+340,walls[3].y-10);
-                ctx.drawImage(tuboHorizontal,walls[3].x+430,walls[3].y-10);
-                ctx.drawImage(tuboHorizontal,walls[3].x+520,walls[3].y-10);
-                ctx.drawImage(tuboHorizontal,walls[3].x+610,walls[3].y-10);
-                ctx.drawImage(tuboHorizontal,walls[3].x+700,walls[3].y-10);
-                ctx.drawImage(tuboHorizontal,walls[3].x+790,walls[3].y-10);
-                ctx.drawImage(tuboHorizontal,walls[3].x+880,walls[3].y-10);
-                ctx.drawImage(tuboHorizontal,walls[3].x+970,walls[3].y-10);
-
-                //interior
-                ctx.drawImage(tuboHorizontal,walls[4].x+10,walls[4].y-5);
-                ctx.drawImage(tuboHorizontal,walls[5].x,walls[5].y-5);
-                ctx.drawImage(tuboHorizontal,walls[5].x+100,walls[5].y-5);
-                ctx.drawImage(tuboHorizontal,walls[5].x+200,walls[5].y-5);
-                ctx.drawImage(tuboVertical,walls[6].x-5,walls[6].y);
-                ctx.drawImage(tuboVertical,walls[7].x-5,walls[7].y);
-                ctx.drawImage(tuboHorizontal,walls[8].x,walls[8].y-5);
-                ctx.drawImage(tuboHorizontal,walls[8].x+100,walls[8].y-5);
-                ctx.drawImage(tuboHorizontal,walls[8].x,walls[8].y-5);
-                ctx.drawImage(tuboHorizontal,walls[9].x-5,walls[9].y-5);
-                ctx.drawImage(tuboHorizontal,walls[10].x-5,walls[10].y);
-                ctx.drawImage(tuboHorizontal,walls[11].x-5,walls[11].y);
-                ctx.drawImage(tuboHorizontal,walls[11].x+90,walls[11].y);
-                ctx.drawImage(tuboHorizontal,walls[11].x+190,walls[11].y);
-                ctx.drawImage(tuboHorizontal,walls[12].x,walls[12].y-5);
-                ctx.drawImage(tuboHorizontal,walls[12].x+100,walls[12].y-5);
-                ctx.drawImage(tuboVertical,walls[13].x-10,walls[13].y);
-                ctx.drawImage(tuboVertical,walls[13].x-10,walls[13].y+100);
             }
+            //interior
+            ctx.drawImage(tuboHorizontal,walls[4].x+10,walls[4].y-5);
+            ctx.drawImage(tuboHorizontal,walls[5].x,walls[5].y-5);
+            ctx.drawImage(tuboHorizontal,walls[5].x+100,walls[5].y-5);
+            ctx.drawImage(tuboHorizontal,walls[5].x+200,walls[5].y-5);
+            ctx.drawImage(tuboVertical,walls[6].x-5,walls[6].y);
+            ctx.drawImage(tuboVertical,walls[7].x-5,walls[7].y);
+            ctx.drawImage(tuboHorizontal,walls[8].x,walls[8].y-5);
+            ctx.drawImage(tuboHorizontal,walls[8].x+100,walls[8].y-5);
+            ctx.drawImage(tuboHorizontal,walls[8].x,walls[8].y-5);
+            ctx.drawImage(tuboHorizontal,walls[9].x-5,walls[9].y-5);
+            ctx.drawImage(tuboHorizontal,walls[9].x+90,walls[9].y-5);
+            ctx.drawImage(tuboHorizontal,walls[9].x+190,walls[9].y-5);
+            ctx.drawImage(tuboHorizontal,walls[9].x+290,walls[9].y-5);
+            ctx.drawImage(tuboHorizontal,walls[10].x-5,walls[10].y);
+            ctx.drawImage(tuboHorizontal,walls[11].x-5,walls[11].y);
+            ctx.drawImage(tuboHorizontal,walls[11].x+90,walls[11].y);
+            ctx.drawImage(tuboHorizontal,walls[11].x+190,walls[11].y);
+            ctx.drawImage(tuboHorizontal,walls[12].x,walls[12].y-5);
+            ctx.drawImage(tuboHorizontal,walls[12].x+100,walls[12].y-5);
+            ctx.drawImage(tuboVertical,walls[13].x-10,walls[13].y);
+            ctx.drawImage(tuboVertical,walls[13].x-10,walls[13].y+95);
+            ctx.drawImage(tuboVertical,walls[13].x-10,walls[13].y+190);
+            ctx.drawImage(tuboVertical,walls[13].x-10,walls[13].y+285);
+            ctx.drawImage(tuboVertical,walls[13].x-10,walls[13].y+380);
+            ctx.drawImage(tuboVertical,walls[14].x-10,walls[14].y);
+            ctx.drawImage(tuboVertical,walls[14].x-10,walls[14].y+95);
+            ctx.drawImage(tuboVertical,walls[14].x-10,walls[14].y+190);
+            ctx.drawImage(tuboVertical,walls[14].x-10,walls[14].y+285);
+            ctx.drawImage(tuboHorizontal,walls[15].x,walls[15].y-10);
+            ctx.drawImage(tuboVertical,walls[16].x-10,walls[16].y-5);
+            ctx.drawImage(tuboHorizontal,walls[17].x+20,walls[17].y-10);
+            ctx.drawImage(tuboVertical,walls[18].x-10,walls[18].y);
+            ctx.drawImage(tuboVertical,walls[18].x-10,walls[18].y+100);
+            ctx.drawImage(tuboVertical,walls[18].x-10,walls[18].y+200);
+            ctx.drawImage(tuboVertical,walls[19].x-10,walls[19].y);
+            ctx.drawImage(tuboVertical,walls[19].x-10,walls[19].y+100);
+            ctx.drawImage(tuboVertical,walls[19].x-10,walls[19].y+200);
+            ctx.drawImage(tuboVertical,walls[19].x-10,walls[19].y+300);
+            ctx.drawImage(tuboVertical,walls[20].x-10,walls[20].y);
+            ctx.drawImage(tuboVertical,walls[20].x-10,walls[20].y+100);
+            ctx.drawImage(tuboVertical,walls[20].x-10,walls[20].y+200);
+            ctx.drawImage(tuboVertical,walls[21].x-10,walls[21].y);
+            ctx.drawImage(tuboVertical,walls[21].x-10,walls[21].y+100);
+            ctx.drawImage(tuboVertical,walls[21].x-10,walls[21].y+200);
+            ctx.drawImage(tuboVertical,walls[21].x-10,walls[21].y+300);
+            ctx.drawImage(tuboVertical,walls[21].x-10,walls[21].y+300);
+            ctx.drawImage(tuboVertical,walls[22].x-10,walls[22].y);
+            ctx.drawImage(tuboVertical,walls[22].x-10,walls[22].y+100);
+            ctx.drawImage(tuboVertical,walls[22].x-10,walls[22].y+200);
+            ctx.drawImage(tuboHorizontal,walls[23].x-5,walls[23].y-10);
+            ctx.drawImage(tuboHorizontal,walls[23].x+90,walls[23].y-10);
+            ctx.drawImage(tuboHorizontal,walls[23].x+185,walls[23].y-10);
+            ctx.drawImage(tuboHorizontal,walls[23].x+280,walls[23].y-10);
+            ctx.drawImage(tuboHorizontal,walls[23].x+375,walls[23].y-10);
+            ctx.drawImage(tuboHorizontal,walls[24].x-40,walls[24].y-10);
+            ctx.drawImage(tuboHorizontal,walls[24].x+55,walls[24].y-10);
+            ctx.drawImage(tuboHorizontal,walls[24].x+150,walls[24].y-10);
+            ctx.drawImage(tuboHorizontal,walls[24].x+245,walls[24].y-10);
+            ctx.drawImage(tuboHorizontal,walls[24].x+340,walls[24].y-10);
+            ctx.drawImage(tuboHorizontal,walls[25].x-5,walls[25].y-10);
+            ctx.drawImage(tuboHorizontal,walls[25].x+90,walls[25].y-10);
+            ctx.drawImage(tuboHorizontal,walls[25].x+185,walls[25].y-10);
+            ctx.drawImage(tuboHorizontal,walls[25].x+280,walls[25].y-10);
+            ctx.drawImage(tuboHorizontal,walls[25].x+375,walls[25].y-10);
+
+            //Exterior
+            ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y-2);
+            ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+90);
+            ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+182);
+            ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+274);
+            ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+366);
+            ctx.drawImage(tuboVertical,walls[0].x-12,walls[0].y+458);
+            ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y-2);
+            ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+90);
+            ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+182);
+            ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+274);
+            ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+366);
+            ctx.drawImage(tuboVertical,walls[1].x-10,walls[1].y+458);
+            ctx.drawImage(tuboHorizontal,walls[2].x-20,walls[2].y-10);
+            ctx.drawImage(tuboHorizontal,walls[2].x+70,walls[2].y-10);
+            ctx.drawImage(tuboHorizontal,walls[2].x+160,walls[2].y-10);
+            ctx.drawImage(tuboHorizontal,walls[2].x+250,walls[2].y-10);
+            ctx.drawImage(tuboHorizontal,walls[2].x+340,walls[2].y-10);
+            ctx.drawImage(tuboHorizontal,walls[2].x+430,walls[2].y-10);
+            ctx.drawImage(tuboHorizontal,walls[2].x+520,walls[2].y-10);
+            ctx.drawImage(tuboHorizontal,walls[2].x+610,walls[2].y-10);
+            ctx.drawImage(tuboHorizontal,walls[2].x+700,walls[2].y-10);
+            ctx.drawImage(tuboHorizontal,walls[2].x+790,walls[2].y-10);
+            ctx.drawImage(tuboHorizontal,walls[2].x+880,walls[2].y-10);
+            ctx.drawImage(tuboHorizontal,walls[2].x+970,walls[2].y-10);
+            ctx.drawImage(tuboHorizontal,walls[3].x-20,walls[3].y-10);
+            ctx.drawImage(tuboHorizontal,walls[3].x+70,walls[3].y-10);
+            ctx.drawImage(tuboHorizontal,walls[3].x+160,walls[3].y-10);
+            ctx.drawImage(tuboHorizontal,walls[3].x+250,walls[3].y-10);
+            ctx.drawImage(tuboHorizontal,walls[3].x+340,walls[3].y-10);
+            ctx.drawImage(tuboHorizontal,walls[3].x+430,walls[3].y-10);
+            ctx.drawImage(tuboHorizontal,walls[3].x+520,walls[3].y-10);
+            ctx.drawImage(tuboHorizontal,walls[3].x+610,walls[3].y-10);
+            ctx.drawImage(tuboHorizontal,walls[3].x+700,walls[3].y-10);
+            ctx.drawImage(tuboHorizontal,walls[3].x+790,walls[3].y-10);
+            ctx.drawImage(tuboHorizontal,walls[3].x+880,walls[3].y-10);
+            ctx.drawImage(tuboHorizontal,walls[3].x+970,walls[3].y-10);
         }
 
         function random(number){
