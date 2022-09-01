@@ -18,18 +18,18 @@
         var cv = null;
         var ctx = null;
         var player1 = null;
-        var plasmid = null;
         var bomb = [5];
         var walls = [100];
         var obstacle = [100];
         var direccion = '';
         var score = 0;
+        var life = 3;
         var speed = 2;
         var time = 0;
+        var daño = false;
         var pausa = false;
         var espace = false;
         var bigdaddy = new Image();
-        var plasmidImage = new Image();
         var bomba = new Image();
         var tuboVertical = new Image();
         var tuboHorizontal = new Image();
@@ -37,14 +37,12 @@
         var img = new Image();
         var song = new Audio();
         var bombSound = new Audio();
-        var adam = new Audio();
 
         function run(){
 
             cv = document.getElementById("mycanvas");
             ctx = cv.getContext("2d");
             player1 = new Cuadro(480,270,40,40,"red");
-            plasmid = new Cuadro(random(400),random(400),40,40,"red");
 
             wallsCreate();
             obstacleCreate();
@@ -52,7 +50,6 @@
 
             img.src = 'img/bigdaddyFondo.jpg'
             bigdaddy.src = 'img/bigdaddy.png';
-            plasmidImage.src= 'img/plasmid.png';
             bomba.src = 'img/bomba.png';
             tuboVertical.src = 'img/tubo1.png';
             tuboHorizontal.src = 'img/tubo2.png';
@@ -70,19 +67,15 @@
             window.requestAnimationFrame(paint);
 
             ctx.drawImage(img, 0,0);
-            ctx.fillStyle = "rgba(0,0,0,0)";
-            ctx.fillRect(0, 0, 1060, 560);
+            ctx.fillStyle = "rgba(0,0,255,1)";
+            ctx.fillRect(1060, 0, 570, 560);
             
-            ctx.fillStyle="white";
-            ctx.fillText("Bombas restantes:"+score,50,50);
+            paintInstructions();
 
             //player1.pintar(ctx);
             ctx.drawImage(bigdaddy, player1.x-5, player1.y);
-            //plasmid.pintar(ctx);
-            ctx.drawImage(plasmidImage, plasmid.x, plasmid.y);
 
             drawObstacle()
-
             paintMap();
             
             if(espace){
@@ -93,6 +86,7 @@
                     bomba.src = 'img/explosion.png';
                     bombsDraw();
                     if(time>=200){
+                        daño=false;
                         time=0;
                         espace=false;
                         bomba.src = 'img/bomba.png';
@@ -106,6 +100,12 @@
                 
                 ctx.fillStyle="white";
                 ctx.fillText('P A U S E', 530,245);
+            }else if(life<=0){
+                ctx.fillStyle="rgba(0,0,0,0.8)";
+                ctx.fillRect(0,0,1060,560);
+                
+                ctx.fillStyle="white";
+                ctx.fillText('G A M E  O V E R', 530,245);
             }else if(score==0){
                 ctx.fillStyle="rgba(0,0,0,0.8)";
                 ctx.fillRect(0,0,1060,560);
@@ -152,14 +152,24 @@
                 }
                 bigdaddy.src = 'img/bigdaddy.png';
             }
-            
-            if (player1.intersects(plasmid)){
-                plasmid.x = random(500);
-                plasmid.y = random(500);
-                adam.play();
-            }
 
             collision();
+        }
+
+        function paintInstructions(){
+
+            ctx.fillStyle="white";
+            ctx.fillText("Instrucciones:", 1170,100);
+            ctx.font = "15px Arial";
+            ctx.fillText("> Para terminar el juego debes destruir todas las", 1170,150);
+            ctx.fillText("tuberias con el siguiente diseño:", 1170,170);
+            ctx.drawImage(tuboDestruible, 1170, 180);
+            ctx.fillText("> Cuidate de las explosiones, ser alcanzado por una", 1170,250);
+            ctx.fillText("hara que pierdas una vida.", 1170,270);
+            ctx.font = "20px Arial";
+            ctx.fillText("Vidas restantes: " + life, 1170,320);
+            ctx.fillText("Tuberias destruibles restantes: "+score,1170,350);
+
         }
 
         document.addEventListener("keydown", function (e) {
@@ -399,6 +409,16 @@
                         }
                     }   
                 } 
+            }
+
+            if(espace){
+                for (var x = 0; x < bomb.length; x++) {
+                if(player1.intersects(bomb[x]) && time>=150 && daño==false){
+                    daño=true;
+                    life--;
+                    break;
+                } 
+            }
             }
         }
 
